@@ -9,7 +9,7 @@ const source = `
 refs:
   a: '123'
 ---
-<button :label="a">wwwwww</button>
+<button :label="a" @click="console.log('click')">wwwwww</button>
 `.trim()
 
 render(root, source)

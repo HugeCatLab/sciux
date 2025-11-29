@@ -1,4 +1,4 @@
-import { ContextContainer, createContextContainer, Document, NodeElement, Element, getPrefab, CommonProperty, ComputedProperty, effect, ReactiveEffectRunner, createAdhoc, TextElement, ValueElement } from "../core"
+import { ContextContainer, createContextContainer, Document, NodeElement, Element, getPrefab, CommonProperty, ComputedProperty, effect, ReactiveEffectRunner, createAdhoc, TextElement, ValueElement, ref } from "../core"
 import { convert } from "../parser"
 
 export const computeProps = (
@@ -15,6 +15,18 @@ export const computeProps = (
     }
   }
   return result
+}
+
+export const delegateEvents = (
+  events: Record<string, string>,
+  context: ContextContainer,
+  target: Node,
+) => {
+  const adhoc = createAdhoc(context.getContext())
+  for (const [event, value] of Object.entries(events)) {
+    const handler = adhoc(`() => { ${value} }`)
+    target.addEventListener(event, handler)
+  }
 }
 
 export const renderNodeElement = (
@@ -34,6 +46,7 @@ export const renderNodeElement = (
       clearEffect = effect(() => generator(() => children))
       fragment.replaceWith(ele)
       fragment = <HTMLElement>ele
+      delegateEvents(node.events, context, fragment)
     }
     effect(update)
     return fragment
@@ -81,7 +94,7 @@ export const applyRefs = (
 ) => {
   const adhoc = createAdhoc(context.getContext())
   const newContext = Object.fromEntries(
-    Object.entries(refs).map(([key, value]) => [key, adhoc(value)])
+    Object.entries(refs).map(([key, value]) => [key, ref(adhoc(value))])
   )
   context.addContext(newContext)
 }
