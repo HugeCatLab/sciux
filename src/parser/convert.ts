@@ -1,5 +1,6 @@
-import { ChildNode, NodeType } from "./tree"
-import { Element, TextElement, ValueElement, NodeElement, CommonProperty, ComputedProperty } from "../core"
+import { ChildNode, NodeType, parse } from "./tree"
+import { Element, TextElement, ValueElement, NodeElement, CommonProperty, ComputedProperty, Document } from "../core"
+import { parseInfo, removeInfo } from "./info"
 
 export const convertNode = (
   node: ChildNode
@@ -46,4 +47,17 @@ export const convertNode = (
       } satisfies NodeElement
   }
   return null
+}
+
+export const convert = (
+  content: string
+): Document => {
+  const contentWithoutInfo = removeInfo(content)
+  const { children } = parse(contentWithoutInfo)
+  const info = parseInfo(content)
+  const roots = children.map(convertNode).filter((e) => e !== null)
+  return {
+    ...info,
+    roots,
+  } satisfies Document
 }

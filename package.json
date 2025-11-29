@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "vite ./test"
   },
   "keywords": [],
   "author": "",
@@ -14,11 +14,13 @@
     "@types/js-yaml": "^4.0.9",
     "tsup": "^8.5.1",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^7.2.4"
   },
   "dependencies": {
     "@vue/reactivity": "^3.5.25",
     "js-yaml": "^4.1.1",
+    "morphdom": "^2.7.7",
     "parse-entities": "^4.0.2"
   }
 }

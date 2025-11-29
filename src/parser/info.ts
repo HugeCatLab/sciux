@@ -10,3 +10,7 @@ export const parseInfo = (content: string): DocumentInfo => {
   }
   return { refs: {} } satisfies DocumentInfo
 }
+
+export const removeInfo = (content: string): string => {
+  return content.replace(COMPONENT_INFO_REG, '').trim()
+}

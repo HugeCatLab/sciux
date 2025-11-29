@@ -24,7 +24,7 @@ export const addContext = (
 ) => setContext(
   active,
   mergeContext(active, context)
-  )
+)
 export const clearContext = (
   active: Context
 ) => {
@@ -34,10 +34,25 @@ export const clearContext = (
 export const createContextContainer = () => {
   let activeContext: Context = reactive({})
   return {
-    getContext: () => getContext(activeContext),
-    setContext: (context: Context) => setContext(activeContext, context),
-    addContext: (context: Context) => addContext(activeContext, context),
-    clearContext: () => clearContext(activeContext)
+    getContext: () => activeContext,
+    setContext: (context: Context) => {
+      // Clear existing properties
+      for (const key in activeContext) {
+        delete activeContext[key]
+      }
+      // Add new properties
+      Object.assign(activeContext, context)
+    },
+    addContext: (context: Context) => {
+      // Add/override properties
+      Object.assign(activeContext, context)
+    },
+    clearContext: () => {
+      // Clear all properties
+      for (const key in activeContext) {
+        delete activeContext[key]
+      }
+    }
   }
 }
 
