@@ -1,4 +1,4 @@
-import { registerPrefab, render } from "../../src"
+import { registerPrefab, createContextContainer, createRenderer } from "../../src"
 import { button } from "./button"
 
 registerPrefab('button', { prefab: button })
@@ -12,4 +12,6 @@ refs:
 <button :label="a" @click="console.log('click')">wwwwww</button>
 `.trim()
 
-render(root, source)
+const renderer = createRenderer()
+
+renderer.render(root, source)

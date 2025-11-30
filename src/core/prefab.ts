@@ -2,8 +2,8 @@ export type ChildrenGetter = () => Node[]
 export type PrefabGenerator = (children: ChildrenGetter) => void
 export type AsyncPrefabGenerator = (children: ChildrenGetter) => Promise<void>
 
-export type Prefab<T extends object> = (attrs: T) => [Node, PrefabGenerator]
-export type AsyncPrefab<T extends object> = (attrs: T) => [Node, AsyncPrefabGenerator]
+export type Prefab<T extends object> = (attrs: T) => [Node, PrefabGenerator, PrefabOptions?]
+export type AsyncPrefab<T extends object> = (attrs: T) => [Node, AsyncPrefabGenerator, PrefabOptions?]
 
 export type PrefabRegistryItem = {
   prefab: Prefab<any>
@@ -27,4 +27,9 @@ export const removePrefab = (name: string) => {
 }
 export const clearPrefabs = () => {
   prefabs.clear()
+}
+
+export type PrefabMountHook = () => void
+export type PrefabOptions = {
+  mount?: PrefabMountHook
 }

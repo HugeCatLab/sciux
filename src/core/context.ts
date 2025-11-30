@@ -3,34 +3,6 @@ import { reactive } from '@vue/reactivity'
 
 export type Context<T = Record<string | symbol, any>> = Reactive<T>
 
-export const mergeContext = (
-  target: Context,
-  newContext: Context,
-) => reactive({
-  ...target,
-  ...newContext,
-})
-
-export const getContext = (active: Context) => active
-export const setContext = (
-  active: Context,
-  target: Context,
-) => {
-  active = reactive(target)
-}
-export const addContext = (
-  active: Context,
-  context: Context,
-) => setContext(
-  active,
-  mergeContext(active, context)
-)
-export const clearContext = (
-  active: Context
-) => {
-  active = reactive({})
-}
-
 export const createContextContainer = () => {
   let activeContext: Context = reactive({})
   return {
@@ -52,7 +24,7 @@ export const createContextContainer = () => {
       for (const key in activeContext) {
         delete activeContext[key]
       }
-    }
+    },
   }
 }
 

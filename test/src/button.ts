@@ -6,6 +6,7 @@ export const button = definePrefab<{
   const b = document.createElement('button')
   return [b, (children) => {
     b.textContent = label
+    console.log(b.getBoundingClientRect())
     console.log(children())
   }]
 })
