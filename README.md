@@ -37,7 +37,7 @@ render(source, root)
 ### Event
 
 ```md
-<element @click="console.log('click')" />
+<element @click="
 ```
 
 ### Value Insert

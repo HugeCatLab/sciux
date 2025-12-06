@@ -1,4 +1,4 @@
-import { ContextContainer, createContextContainer, Document, NodeElement, Element, getPrefab, CommonProperty, ComputedProperty, effect, ReactiveEffectRunner, createAdhoc, TextElement, ValueElement, ref, PrefabMountHook, PrefabOptions } from "../core"
+import { ContextContainer, createContextContainer, Document, NodeElement, Element, getPrefab, CommonProperty, ComputedProperty, effect, ReactiveEffectRunner, createAdhoc, TextElement, ValueElement, ref, PrefabMountHook, PrefabOptions, mergeContext } from "../core"
 import { convert } from "../parser"
 
 export const createRenderer = () => {
@@ -6,9 +6,14 @@ export const createRenderer = () => {
   const mountHooks: PrefabMountHook[] = []
 
   const applyOptions = (options: PrefabOptions) => {
+    const ctx = {}
     if (options.mount) {
       mountHooks.push(options.mount)
     }
+    if (options.provides) {
+      Object.assign(ctx, options.provides)
+    }
+    return ctx
   }
   
   const computeProps = (
@@ -46,14 +51,21 @@ export const createRenderer = () => {
       let fragment: HTMLElement = document.createElement('div')
       let clearEffect: ReactiveEffectRunner | null = null
       const update = () => {
-        const children = node.children.map(child => renderElement(child)).filter((e) => typeof e !== 'undefined')
         const props = computeProps(node.props)
-        const [ele, generator, options = {}] = prefab(props)
+        const [ele, generator, options = {}] = prefab(props, context.getContext())
         if (clearEffect) clearEffect()
+        const appliedContext = applyOptions(options)
+        const children = context.withContext(mergeContext(
+          context.getContext(),
+          appliedContext,
+        ), () => {
+
+          return node.children.map(child => renderElement(child)).filter((e) => typeof e !== 'undefined')
+        })
+
         clearEffect = effect(() => generator(() => children))
         fragment.replaceWith(ele)
         fragment = <HTMLElement>ele
-        applyOptions(options)
         delegateEvents(node.events, fragment)
       }
       effect(update)

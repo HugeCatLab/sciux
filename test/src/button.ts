@@ -6,7 +6,24 @@ export const button = definePrefab<{
   const b = document.createElement('button')
   return [b, (children) => {
     b.textContent = label
-    console.log(b.getBoundingClientRect())
-    console.log(children())
+
+
   }]
+})
+
+export const ctn = definePrefab<{}>((a, c) => {
+  const div = document.createElement('div')
+
+  return [
+    div,
+    (children) => {
+
+      div.append(...children())
+    },
+    {
+      provides: {
+        b: 1
+      }
+    }
+  ]
 })

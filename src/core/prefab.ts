@@ -1,9 +1,11 @@
+import { Context } from "./context"
+
 export type ChildrenGetter = () => Node[]
 export type PrefabGenerator = (children: ChildrenGetter) => void
 export type AsyncPrefabGenerator = (children: ChildrenGetter) => Promise<void>
 
-export type Prefab<T extends object> = (attrs: T) => [Node, PrefabGenerator, PrefabOptions?]
-export type AsyncPrefab<T extends object> = (attrs: T) => [Node, AsyncPrefabGenerator, PrefabOptions?]
+export type Prefab<T extends object> = (attrs: T, context: Context) => [Node, PrefabGenerator, PrefabOptions?]
+export type AsyncPrefab<T extends object> = (attrs: T, context: Context) => [Node, AsyncPrefabGenerator, PrefabOptions?]
 
 export type PrefabRegistryItem = {
   prefab: Prefab<any>
@@ -30,6 +32,8 @@ export const clearPrefabs = () => {
 }
 
 export type PrefabMountHook = () => void
+export type PrefabProvides = Record<string, unknown>
 export type PrefabOptions = {
   mount?: PrefabMountHook
+  provides?: PrefabProvides
 }
